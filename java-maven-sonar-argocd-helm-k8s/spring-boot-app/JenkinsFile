@@ -10,8 +10,7 @@ pipeline {
         }
         stage('Build and Test') {
             steps {
-                sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app'
-                sh 'mvn clean install'
+                sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean install'
                 sh 'ls -l'
             }
        }
