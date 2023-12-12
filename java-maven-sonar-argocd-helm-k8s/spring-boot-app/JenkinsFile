@@ -31,7 +31,7 @@ pipeline {
                 script {
                    withDockerRegistry(credentialsId: 'dockerhub-cred') {
                      sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t aasim113322/argo-app:${BUILD_NUMBER} .'
-                     sh 'docker push aasim113322/argo-app'
+                     sh 'docker push aasim113322/argo-app:${BUILD_NUMBER}'
                    }
                 }
                 
@@ -45,8 +45,8 @@ pipeline {
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    git config user.email "asim.xyz@gmail.com"
-                    git config user.name "asim"
+                     git config --global user.email "asim@example.com"
+                     git config --global user.name "asim shaikh"
                     BUILD_NUMBER=${BUILD_NUMBER}
                     git clone https://github.com/asim0196/argo-manifest.git
                     cd argo-manifest && bash build.sh
