@@ -48,6 +48,7 @@ pipeline {
                      git config --global user.email "asim@example.com"
                      git config --global user.name "asim shaikh"
                     BUILD_NUMBER=${BUILD_NUMBER}
+                    rm -rf argo-manifest
                     git clone https://github.com/asim0196/argo-manifest.git
                     cd argo-manifest && bash build.sh
                     git add .
