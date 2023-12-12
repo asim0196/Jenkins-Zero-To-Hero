@@ -24,7 +24,18 @@ pipeline {
         }
       }
     }
-    }
+    stage('Docker build and Push ') {
+            steps {
+                script {
+                   withDockerRegistry(credentialsId: 'dockerhub-cred') {
+                     sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t aasim113322/argo-app .'
+                     sh 'docker push aasim113322/argo-app'
+                   }
+                }
+                
+            }
+       }
+  }
     
 }
 
