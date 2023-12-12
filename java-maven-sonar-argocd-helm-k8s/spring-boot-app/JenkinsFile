@@ -30,13 +30,33 @@ pipeline {
             steps {
                 script {
                    withDockerRegistry(credentialsId: 'dockerhub-cred') {
-                     sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t aasim113322/argo-app .'
+                     sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t aasim113322/argo-app:${BUILD_NUMBER} .'
                      sh 'docker push aasim113322/argo-app'
                    }
                 }
                 
             }
        }
+       stage('Update Deployment File') {
+        environment {
+            GIT_REPO_NAME = "argo-manifest"
+            GIT_USER_NAME = "asim0196"
+        }
+        steps {
+            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                sh '''
+                    git config user.email "asim.xyz@gmail.com"
+                    git config user.name "asim"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    git clone https://github.com/asim0196/argo-manifest.git
+                    cd argo-manifest && bash build.sh
+                    git add .
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+            }
+        }
+    }
   }
     
 }
